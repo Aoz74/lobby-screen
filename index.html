@@ -107,6 +107,27 @@
         .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         input, textarea { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 5px; }
         .gear { position: fixed; top: 10px; left: 10px; opacity: 0.2; cursor: pointer; z-index: 10000; font-size: 24px; }
+
+		.middle-roller {
+		  position: absolute;
+		  bottom: 30px;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  background: rgba(0,0,0,0.6);
+		  padding: 10px 30px;
+		  border-radius: 20px;
+		  font-size: 1.4rem;
+		  opacity: 0;
+		  transition: all 0.6s ease;
+		}
+		.middle-roller.show {
+		  opacity: 1;
+		  transform: translate(-50%, -20px);
+		}
+
+
+
+		
     </style>
 </head>
 <body>
@@ -167,6 +188,17 @@
             </div>
         </div>
 
+		<div id="middle-roller" class="middle-roller">ברוכים הבאים לבניין</div>
+
+
+		<div class="sidebar">
+		    <div class="sidebar-title" id="right-title">🌐 מבזקי וואלה!</div>
+		    <div class="feed-container">
+		        <div class="scroll-v" id="right-content">טוען...</div>
+		    </div>
+		</div>
+		
+		
         <div class="sidebar">
             <div class="sidebar-title">🌐 מבזקי וואלה!</div>
             <div class="feed-container">
@@ -190,6 +222,28 @@
 		};
 
 
+		const rollerMessages = [
+		  "נא לשמור על השקט בלובי",
+		  "תודה על שמירת הניקיון",
+		  "ביחד שומרים על איכות חיים"
+		];
+		
+		let rollerIndex = 0;
+		
+		setInterval(() => {
+		  const el = document.getElementById("middle-roller");
+		  el.classList.remove("show");
+		
+		  setTimeout(() => {
+		    el.innerText = rollerMessages[rollerIndex];
+		    el.classList.add("show");
+		    rollerIndex = (rollerIndex + 1) % rollerMessages.length;
+		  }, 600);
+		
+		}, 3000);
+
+		
+		
 		function weatherIcon(code) {
 		  if (code === 0) return "☀️";
 		  if ([1,2].includes(code)) return "🌤️";
@@ -263,6 +317,8 @@
 		  }
 		}
 
+
+		
 
         function updateDisplay() {
             document.getElementById('display-title').innerText = config.title;
