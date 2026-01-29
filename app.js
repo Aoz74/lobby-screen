@@ -20,10 +20,13 @@ fetch("config.json")
     const board = document.getElementById("board-messages");
     cfg.boardMessages.forEach(msg => {
       const div = document.createElement("div");
-      div.innerHTML = `<strong>${msg.title}</strong><br>${msg.body}`;
       div.style.marginBottom = "20px";
+      div.innerHTML =
+        "<strong>" + msg.title + "</strong><br>" +
+        msg.body;
       board.appendChild(div);
     });
+
   });
 
 // פרשת השבוע רק ביום שישי
