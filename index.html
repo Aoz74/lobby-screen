@@ -175,8 +175,8 @@
         </div>
 
         <div class="footer-ticker">
-            <div class="ticker-label">מבזקי YNET</div>
-            <div class="marquee-h" id="ynet-feed">טוען מבזקים בזמן אמת...</div>
+            <div class="ticker-label">מבזקי מעריב</div>
+            <div class="marquee-h" id="maariv-feed">טוען מבזקים בזמן אמת...</div>
         </div>
     </div>
 
@@ -185,7 +185,6 @@
 		  title: "אמהות 11 - ברוכים הבאים",
 		  bg: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
 		  comm: ["שדרוג המעליות יחל בקרוב", "נא לשמור על הניקיון", "תודה לועד הבית"],
-		  ynetUrl: "https://rss.view.nuvola.co.il/api/Rss/ynet",
 		  wallaUrl: "https://rss.view.nuvola.co.il/api/Rss/walla",
 		  maarivUrl: "https://rss.view.nuvola.co.il/api/Rss/maariv"
 		};
@@ -239,7 +238,7 @@
             document.getElementById('comm-list').innerHTML = config.comm.map(i => `<div class="news-item">${i}</div>`).join('');
 
 			fetchRSS(config.wallaUrl, 'walla-feed', false);
-			fetchRSS(config.ynetUrl, 'ynet-feed', true);
+			fetchRSS(config.maarivUrl, 'maariv-feed', true);
 
             fetchWeather();
             
