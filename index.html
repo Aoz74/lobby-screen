@@ -1,303 +1,301 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobby Display - Amahot 11</title>
-    <style>
-        :root {
-            --primary: #0f172a;
-            --accent: #2563eb;
-            --danger: #dc2626;
-            --text: #f8fafc;
-            --panel: rgba(30, 41, 59, 0.7);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lobby Display - Amahot 11</title>
 
-        body, html {
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
-            font-family: 'Segoe UI', system-ui, -apple-system;
-            background: #020617; color: var(--text); overflow: hidden;
-        }
+<style>
+:root {
+  --accent:#2563eb;
+  --danger:#dc2626;
+  --text:#f8fafc;
+  --panel:rgba(30,41,59,.75);
+}
 
-        /* Layout */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 350px 1fr 350px;
-            grid-template-rows: 100px 1fr 60px;
-            height: 100vh; gap: 15px; padding: 15px; box-sizing: border-box;
-        }
+html,body{
+  margin:0;height:100%;width:100%;
+  background:#020617;color:var(--text);
+  font-family:'Segoe UI',system-ui;
+  overflow:hidden;
+}
 
-        /* Header */
+.dashboard{
+  display:grid;
+  grid-template-columns:350px 1fr 350px;
+  grid-template-rows:100px 1fr 60px;
+  gap:15px;
+  padding:15px;
+  height:100%;
+  box-sizing:border-box;
+}
 
-		header {
-		  grid-column: 1 / -1;
-		  background: var(--panel);
-		  display: flex;
-		  align-items: center;
-		  padding: 0 30px;
-		  border-radius: 15px;
-		  border: 1px solid rgba(255,255,255,0.1);
-		
-		  justify-content: space-between;
-		}
+header{
+  grid-column:1/-1;
+  background:var(--panel);
+  border-radius:15px;
+  padding:0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
 
-		
-        .clock-area { text-align: right; display: flex; gap: 20px; align-items: center; }
-        .time { font-size: 2.5rem; font-weight: 800; line-height: 1; }
-        .date { font-size: 1.1rem; color: #94a3b8; }
-        .weather { font-size: 1.5rem; color: #fbbf24; font-weight: bold; }
+.clock-area{
+  display:flex;
+  gap:20px;
+  align-items:center;
+  text-align:right;
+}
 
-        /* Sidebar Containers */
-        .sidebar {
-            background: var(--panel); border-radius: 15px;
-            display: flex; flex-direction: column; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+.time{font-size:2.5rem;font-weight:800}
+.date{font-size:1.1rem;color:#94a3b8}
+.weather{font-size:1.5rem;color:#fbbf24;font-weight:bold}
 
-        .sidebar-title {
-            background: var(--accent); padding: 12px;
-            text-align: center; font-weight: bold; font-size: 1.2rem;
-        }
+.sidebar{
+  background:var(--panel);
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
 
-        .feed-container { flex: 1; overflow: hidden; position: relative; }
+.sidebar-title{
+  background:var(--accent);
+  padding:12px;
+  text-align:center;
+  font-size:1.2rem;
+  font-weight:bold;
+}
 
-        /* Vertical Scrolling */
-        .scroll-v { animation: scrollUp 50s linear infinite; padding: 15px; }
-        @keyframes scrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+.feed-container{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+}
 
-        .news-item { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.scroll-v{
+  padding:15px;
+  animation:scrollUp 50s linear infinite;
+}
 
-        /* Center Content */
-        .main-stage {
-            position: relative; border-radius: 15px; overflow: hidden;
-            background-size: cover; background-position: center;
-            display: flex; align-items: flex-end;
-        }
+@keyframes scrollUp{
+  from{transform:translateY(0)}
+  to{transform:translateY(-50%)}
+}
 
-        .overlay-text {
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            width: 100%; padding: 40px; box-sizing: border-box;
-        }
+.news-item{
+  margin-bottom:18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  padding-bottom:8px;
+}
 
-        /* Bottom Ticker (FIXED DIRECTION & SPEED) */
-        .footer-ticker {
-            grid-column: 1 / -1; background: var(--danger);
-            display: flex; align-items: center; border-radius: 10px; overflow: hidden;
-            position: relative;
-        }
+.main-stage{
+  position:relative;
+  border-radius:15px;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:flex-end;
+}
 
-        .ticker-label { background: #991b1b; padding: 0 20px; height: 100%; display: flex; align-items: center; z-index: 10; font-weight: bold; }
-        
-        .marquee-h {
-            white-space: nowrap; 
-            display: inline-block;
-            font-size: 1.5rem;
-            padding-right: 20px;
-            /* שינוי האנימציה מימין לשמאל ובמהירות איטית מאוד */
-            animation: scrollRightToLeft 250s linear infinite;
-        }
+.overlay-text{
+  width:100%;
+  padding:40px;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+}
 
-		@keyframes scrollRightToLeft {
-			0% { transform: translateX(-100%); }
-			100% { transform: translateX(0%); } /* שינוי מ-100% ל-0% יוצר רצף */
-		}
+.middle-roller{
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.65);
+  padding:10px 30px;
+  border-radius:20px;
+  font-size:1.4rem;
+  opacity:0;
+  transition:.6s ease;
+}
+.middle-roller.show{
+  opacity:1;
+  transform:translate(-50%,-20px);
+}
 
-        /* Settings */
-        #settings { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; padding: 40px; color: white; overflow-y: auto; }
-        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        input, textarea { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 5px; }
-        .gear { position: fixed; top: 10px; left: 10px; opacity: 0.2; cursor: pointer; z-index: 10000; font-size: 24px; }
-    </style>
+.footer-ticker{
+  grid-column:1/-1;
+  background:var(--danger);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+}
+
+.ticker-label{
+  background:#991b1b;
+  padding:0 20px;
+  font-weight:bold;
+  height:100%;
+  display:flex;
+  align-items:center;
+}
+
+.marquee-h{
+  white-space:nowrap;
+  font-size:1.5rem;
+  padding-right:20px;
+  animation:scrollRTL 220s linear infinite;
+}
+
+@keyframes scrollRTL{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(0)}
+}
+</style>
 </head>
+
 <body>
 
-    <div class="gear" onclick="document.getElementById('settings').style.display='block'">⚙️</div>
+<div class="dashboard">
 
-    <div id="settings">
-        <h2>ניהול מסך לובי - אמהות 11</h2>
-        <div class="settings-grid">
-            <div>
-                <label>כותרת ראשית:</label>
-                <input type="text" id="s-title">
-                <label>לינק לתמונת רקע:</label>
-                <input type="text" id="s-bg">
-                <label>הודעות ועד (אחת בכל שורה):</label>
-                <textarea id="s-comm" rows="10"></textarea>
-            </div>
-            <div>
-                <label>RSS YNET:</label>
-                <input type="text" id="s-ynet-url" value="https://www.ynet.co.il/Integration/StoryRss2.xml">
-                <label>RSS וואלה:</label>
-                <input type="text" id="s-walla-url" value="https://rss.view.nuvola.co.il/api/Rss/walla">
-            </div>
-        </div>
-        <br>
-        <button onclick="saveSettings()" style="background:var(--accent); color:white; padding:15px 40px; border:none; border-radius:5px; cursor:pointer;">שמור ועדכן</button>
-        <button onclick="document.getElementById('settings').style.display='none'" style="background:#444; color:white; padding:15px 40px; border:none; border-radius:5px;">ביטול</button>
+<header>
+  <h1 id="display-title">טוען...</h1>
+  <div id="parasha" style="color:#fbbf24;font-size:1.4rem;font-weight:bold"></div>
+  <div class="clock-area">
+    <div id="weather-info" class="weather">--</div>
+    <div>
+      <div class="time" id="clock-t"></div>
+      <div class="date" id="clock-d"></div>
     </div>
+  </div>
+</header>
 
-    <div class="dashboard">
-		<header>
-		  <h1 id="display-title" style="margin:0; font-size: 2.2rem;">
-		    טוען...
-		  </h1>
-		
-		  <div id="parasha" style="color:#fbbf24; font-size:1.4rem; font-weight:bold;"></div>
-		
-		  <div class="clock-area">
-		    <div id="weather-info" class="weather">טוען...</div>
-		    <div>
-		      <div class="time" id="clock-t">00:00</div>
-		      <div class="date" id="clock-d">טוען תאריך...</div>
-		    </div>
-		  </div>
-		</header>
+<div class="sidebar">
+  <div class="sidebar-title">📢 הודעות ועד הבית</div>
+  <div class="feed-container">
+    <div class="scroll-v" id="comm-list"></div>
+  </div>
+</div>
 
+<div class="main-stage" id="display-bg">
+  <div class="overlay-text">
+    <h2 style="font-size:3rem;margin:0">אמהות 11 - איכות חיים</h2>
+  </div>
+  <div id="middle-roller" class="middle-roller"></div>
+</div>
 
-        <div class="sidebar">
-            <div class="sidebar-title">📢 הודעות ועד הבית</div>
-            <div class="feed-container">
-                <div class="scroll-v" id="comm-list"></div>
-            </div>
-        </div>
+<div class="sidebar">
+  <div class="sidebar-title" id="right-title"></div>
+  <div class="feed-container">
+    <div class="scroll-v" id="right-content"></div>
+  </div>
+</div>
 
-        <div class="main-stage" id="display-bg">
-            <div class="overlay-text">
-                <h2 style="font-size: 3rem; margin: 0;">אמהות 11 - איכות חיים</h2>
-            </div>
-        </div>
+<div class="footer-ticker">
+  <div class="ticker-label">ℹ️</div>
+  <div class="marquee-h" id="footer-text"></div>
+</div>
 
-        <div class="sidebar">
-            <div class="sidebar-title">🌐 מבזקי וואלה!</div>
-            <div class="feed-container">
-                <div class="scroll-v" id="walla-feed">טוען...</div>
-            </div>
-        </div>
+</div>
 
-        <div class="footer-ticker">
-            <div class="ticker-label">מבזקי מעריב</div>
-            <div class="marquee-h" id="maariv-feed">טוען מבזקים בזמן אמת...</div>
-        </div>
-    </div>
+<script>
+const config={
+  title:"אמהות 11 - ברוכים הבאים",
+  bg:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+  comm:[
+    "שדרוג המעליות יחל בקרוב מאוד",
+    "נא לשמור על ניקיון הלובי",
+    "תודה על שיתוף הפעולה"
+  ],
+  wallaUrl:"https://rss.view.nuvola.co.il/api/Rss/walla",
+  maarivUrl:"https://rss.view.nuvola.co.il/api/Rss/maariv"
+};
 
-    <script>
-		let config = JSON.parse(localStorage.getItem('ama11_cfg')) || {
-		  title: "אמהות 11 - ברוכים הבאים",
-		  bg: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
-		  comm: ["שדרוג המעליות יחל בקרוב", "נא לשמור על הניקיון", "תודה לועד הבית"],
-		  wallaUrl: "https://rss.view.nuvola.co.il/api/Rss/walla",
-		  maarivUrl: "https://rss.view.nuvola.co.il/api/Rss/maariv"
-		};
+const rollerMessages=[
+  "נא לשמור על השקט בלובי",
+  "ביחד שומרים על איכות חיים",
+  "תודה על ההתחשבות בשכנים"
+];
 
+function shorten(t,max=40){
+  return t.length>max?t.slice(0,max)+"…":t;
+}
 
-		function weatherIcon(code) {
-		  if (code === 0) return "☀️";
-		  if ([1,2].includes(code)) return "🌤️";
-		  if (code === 3) return "☁️";
-		  if ([45,48].includes(code)) return "🌫️";
-		  if ([51,53,55,61,63,65].includes(code)) return "🌧️";
-		  if ([71,73,75].includes(code)) return "❄️";
-		  if ([95,96,99].includes(code)) return "⛈️";
-		  return "🌡️";
-		}
+function weatherIcon(c){
+  if(c===0)return"☀️";
+  if([1,2].includes(c))return"🌤️";
+  if(c===3)return"☁️";
+  if([51,53,55,61,63,65].includes(c))return"🌧️";
+  if([95,96,99].includes(c))return"⛈️";
+  return"🌡️";
+}
 
+async function fetchWeather(){
+  const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=31.93&longitude=34.80&current_weather=true");
+  const d=await r.json();
+  document.getElementById("weather-info").innerText=
+    weatherIcon(d.current_weather.weathercode)+" "+Math.round(d.current_weather.temperature)+"°C";
+}
 
-		
-		async function fetchWeather() {
-		  try {
-		    const res = await fetch(
-		      "https://api.open-meteo.com/v1/forecast?latitude=31.93&longitude=34.80&current_weather=true"
-		    );
-		    const data = await res.json();
-		
-		    const temp = Math.round(data.current_weather.temperature);
-		    const code = data.current_weather.weathercode;
-		    const icon = weatherIcon(code);
-		
-		    document.getElementById("weather-info").innerText =
-		      `${icon} ${temp}°C`;
-		
-		  } catch (e) {
-		    console.warn("Weather error");
-		  }
-		}
+async function fetchRSS(url,elId,horizontal){
+  const el=document.getElementById(elId);
+  const xml=new DOMParser().parseFromString(await (await fetch(url)).text(),"text/xml");
+  let items=xml.querySelectorAll("item,entry");
+  if(!items.length) items=xml.getElementsByTagName("title");
+  let txt="",html="";
+  [...items].forEach(i=>{
+    const t=i.textContent?.trim();
+    if(!t||t.length<10)return;
+    txt+=t+" • ";
+    html+=`<div class="news-item"><strong>${t}</strong></div>`;
+  });
+  horizontal?el.innerText=txt+txt:el.innerHTML=html;
+}
 
-		async function fetchRSS(url, elementId, isHorizontal = false) {
-		  const el = document.getElementById(elementId);
-		
-		  try {
-		    const res = await fetch(url, { cache: "no-store" });
-		    if (!res.ok) throw new Error("HTTP error");
-		
-		    const xmlText = await res.text();
-		    const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-		
-		    // תומך גם ב-item וגם ב-entry
-		    const items = xml.querySelectorAll("item, entry");
-		
-		    if (!items.length) return;
-		
-		    let text = "";
-		    let html = "";
-		
-		    items.forEach(item => {
-		      const titleNode =
-		        item.querySelector("title") ||
-		        item.querySelector("media\\:title");
-		
-		      const t = titleNode?.textContent?.trim();
-		      if (!t) return;
-		
-		      text += t + "  •  ";
-		      html += `<div class="news-item"><strong>${t}</strong></div>`;
-		    });
-		
-		    if (isHorizontal) {
-		      el.innerText = text + " " + text;
-		    } else {
-		      el.innerHTML = html;
-		    }
-		
-		  } catch (e) {
-		    console.warn("RSS failed:", url);
-		  }
-		}
+function getParasha(){
+  return "פרשת השבוע: יתרו";
+}
 
+function update(){
+  document.getElementById("display-title").innerText=config.title;
+  document.getElementById("display-bg").style.backgroundImage=`url('${config.bg}')`;
+  document.getElementById("comm-list").innerHTML=
+    config.comm.map(t=>`<div class="news-item">${shorten(t)}</div>`).join("");
 
-        function updateDisplay() {
-            document.getElementById('display-title').innerText = config.title;
-            document.getElementById('display-bg').style.backgroundImage = `url('${config.bg}')`;
-            document.getElementById('comm-list').innerHTML = config.comm.map(i => `<div class="news-item">${i}</div>`).join('');
+  const d=new Date().getDay();
+  if(d===5){
+    document.getElementById("right-title").innerText="📖 פרשת השבוע";
+    document.getElementById("right-content").innerHTML=`<div class="news-item">${getParasha()}</div>`;
+    document.getElementById("footer-text").innerText=getParasha()+" • "+getParasha();
+  }else{
+    document.getElementById("right-title").innerText="🌐 מבזקי וואלה!";
+    fetchRSS(config.wallaUrl,"right-content");
+    document.getElementById("footer-text").innerText="מאחלים לכם יום נעים ושקט בבניין 🏡 • ";
+  }
 
-			fetchRSS(config.wallaUrl, 'walla-feed', false);
-			fetchRSS(config.maarivUrl, 'maariv-feed', true);
+  fetchRSS(config.maarivUrl,"footer-text",true);
+  fetchWeather();
+}
 
-            fetchWeather();
-            
-            const day = new Date().getDay();
-            document.getElementById('parasha').innerText = (day >= 5) ? "פרשת השבוע: יתרו" : "";
-        }
+let ri=0;
+setInterval(()=>{
+  const el=document.getElementById("middle-roller");
+  el.classList.remove("show");
+  setTimeout(()=>{
+    el.innerText=rollerMessages[ri];
+    el.classList.add("show");
+    ri=(ri+1)%rollerMessages.length;
+  },500);
+},3000);
 
-        function saveSettings() {
-            config.title = document.getElementById('s-title').value;
-            config.bg = document.getElementById('s-bg').value;
-            config.comm = document.getElementById('s-comm').value.split('\n');
-            localStorage.setItem('ama11_cfg', JSON.stringify(config));
-            location.reload();
-        }
+setInterval(()=>{
+  const n=new Date();
+  clock-t.innerText=n.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"});
+  clock-d.innerText=n.toLocaleDateString("he-IL",{weekday:"long",day:"numeric",month:"long"});
+},1000);
 
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock-t').innerText = now.toLocaleTimeString('he-IL', {hour: '2-digit', minute:'2-digit'});
-            document.getElementById('clock-d').innerText = now.toLocaleDateString('he-IL', {weekday: 'long', day: 'numeric', month: 'long'});
-        }, 1000);
-
-        document.getElementById('s-title').value = config.title;
-        document.getElementById('s-bg').value = config.bg;
-        document.getElementById('s-comm').value = config.comm.join('\n');
-
-        updateDisplay();
-        setInterval(updateDisplay, 600000); // רענון כל 10 דק'
-    </script>
+update();
+setInterval(update,600000);
+</script>
 </body>
 </html>
