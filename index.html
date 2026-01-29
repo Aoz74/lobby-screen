@@ -190,13 +190,37 @@
 		};
 
 
-        async function fetchWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=31.93&longitude=34.80&current_weather=true');
-                const weather = await res.json();
-                document.getElementById('weather-info').innerText = `☀️ ${Math.round(weather.current_weather.temperature)}°C`;
-            } catch (e) { console.log("Weather error"); }
-        }
+		function weatherIcon(code) {
+		  if (code === 0) return "☀️";
+		  if ([1,2].includes(code)) return "🌤️";
+		  if (code === 3) return "☁️";
+		  if ([45,48].includes(code)) return "🌫️";
+		  if ([51,53,55,61,63,65].includes(code)) return "🌧️";
+		  if ([71,73,75].includes(code)) return "❄️";
+		  if ([95,96,99].includes(code)) return "⛈️";
+		  return "🌡️";
+		}
+
+
+		
+		async function fetchWeather() {
+		  try {
+		    const res = await fetch(
+		      "https://api.open-meteo.com/v1/forecast?latitude=31.93&longitude=34.80&current_weather=true"
+		    );
+		    const data = await res.json();
+		
+		    const temp = Math.round(data.current_weather.temperature);
+		    const code = data.current_weather.weathercode;
+		    const icon = weatherIcon(code);
+		
+		    document.getElementById("weather-info").innerText =
+		      `${icon} ${temp}°C`;
+		
+		  } catch (e) {
+		    console.warn("Weather error");
+		  }
+		}
 
 		async function fetchRSS(url, elementId, isHorizontal = false) {
 		  const el = document.getElementById(elementId);
@@ -207,14 +231,23 @@
 		
 		    const xmlText = await res.text();
 		    const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-		    const items = xml.querySelectorAll("item");
+		
+		    // תומך גם ב-item וגם ב-entry
+		    const items = xml.querySelectorAll("item, entry");
+		
+		    if (!items.length) return;
 		
 		    let text = "";
 		    let html = "";
 		
 		    items.forEach(item => {
-		      const t = item.querySelector("title")?.textContent;
+		      const titleNode =
+		        item.querySelector("title") ||
+		        item.querySelector("media\\:title");
+		
+		      const t = titleNode?.textContent?.trim();
 		      if (!t) return;
+		
 		      text += t + "  •  ";
 		      html += `<div class="news-item"><strong>${t}</strong></div>`;
 		    });
@@ -226,7 +259,6 @@
 		    }
 		
 		  } catch (e) {
-		    // אם זה נכשל - שומרים את מה שהיה, לא מציגים שגיאה
 		    console.warn("RSS failed:", url);
 		  }
 		}
