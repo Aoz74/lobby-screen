@@ -238,8 +238,9 @@
             document.getElementById('display-bg').style.backgroundImage = `url('${config.bg}')`;
             document.getElementById('comm-list').innerHTML = config.comm.map(i => `<div class="news-item">${i}</div>`).join('');
 
-            fetchRSS(config.ynetUrl, 'ynet-feed', true);
-            fetchRSS(config.wallaUrl, 'walla-feed', false);
+			fetchRSS(config.wallaUrl, 'walla-feed', false);
+			fetchRSS(config.ynetUrl, 'ynet-feed', true);
+
             fetchWeather();
             
             const day = new Date().getDay();
