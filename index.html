@@ -181,13 +181,15 @@
     </div>
 
     <script>
-        let config = JSON.parse(localStorage.getItem('ama11_cfg')) || {
-            title: "אמהות 11 - ברוכים הבאים",
-            bg: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
-            comm: ["שדרוג המעליות יחל בקרוב", "נא לשמור על הניקיון", "תודה לועד הבית"],
-            ynetUrl: "https://www.ynet.co.il/Integration/StoryRss2.xml",
-            wallaUrl: "https://rss.walla.co.il/feed/1"
-        };
+		let config = JSON.parse(localStorage.getItem('ama11_cfg')) || {
+		  title: "אמהות 11 - ברוכים הבאים",
+		  bg: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
+		  comm: ["שדרוג המעליות יחל בקרוב", "נא לשמור על הניקיון", "תודה לועד הבית"],
+		  ynetUrl: "https://rss.view.nuvola.co.il/api/Rss/ynet",
+		  wallaUrl: "https://rss.view.nuvola.co.il/api/Rss/walla",
+		  maarivUrl: "https://rss.view.nuvola.co.il/api/Rss/maariv"
+		};
+
 
         async function fetchWeather() {
             try {
@@ -200,24 +202,12 @@
 		async function fetchRSS(url, elementId, isHorizontal = false) {
 		  const el = document.getElementById(elementId);
 		
-		  // fallback מיידי
-		  if (isHorizontal) {
-		    el.innerText = "טוען מבזקים... ";
-		  } else {
-		    el.innerHTML = "<div class='news-item'>טוען חדשות...</div>";
-		  }
-		
 		  try {
-		    const controller = new AbortController();
-		    setTimeout(() => controller.abort(), 7000); // timeout
+		    const res = await fetch(url, { cache: "no-store" });
+		    if (!res.ok) throw new Error("HTTP error");
 		
-		    const res = await fetch(
-		      `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-		      { signal: controller.signal }
-		    );
-		
-		    const data = await res.json();
-		    const xml = new DOMParser().parseFromString(data.contents, "text/xml");
+		    const xmlText = await res.text();
+		    const xml = new DOMParser().parseFromString(xmlText, "text/xml");
 		    const items = xml.querySelectorAll("item");
 		
 		    let text = "";
@@ -233,15 +223,12 @@
 		    if (isHorizontal) {
 		      el.innerText = text + " " + text;
 		    } else {
-		      el.innerHTML = html + html;
+		      el.innerHTML = html;
 		    }
 		
 		  } catch (e) {
-		    if (isHorizontal) {
-		      el.innerText = "אין חיבור לחדשות כרגע";
-		    } else {
-		      el.innerHTML = "<div class='news-item'>אין חיבור לחדשות</div>";
-		    }
+		    // אם זה נכשל - שומרים את מה שהיה, לא מציגים שגיאה
+		    console.warn("RSS failed:", url);
 		  }
 		}
 
