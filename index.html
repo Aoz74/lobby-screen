@@ -28,12 +28,20 @@
         }
 
         /* Header */
-        header {
-            grid-column: 1 / -1; background: var(--panel);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
-        }
 
+		header {
+		  grid-column: 1 / -1;
+		  background: var(--panel);
+		  display: flex;
+		  align-items: center;
+		  padding: 0 30px;
+		  border-radius: 15px;
+		  border: 1px solid rgba(255,255,255,0.1);
+		
+		  justify-content: space-between;
+		}
+
+		
         .clock-area { text-align: right; display: flex; gap: 20px; align-items: center; }
         .time { font-size: 2.5rem; font-weight: 800; line-height: 1; }
         .date { font-size: 1.1rem; color: #94a3b8; }
@@ -129,17 +137,22 @@
     </div>
 
     <div class="dashboard">
-        <header>
-            <div class="clock-area">
-                <div id="weather-info" class="weather">טוען...</div>
-                <div>
-                    <div class="time" id="clock-t">00:00</div>
-                    <div class="date" id="clock-d">טוען תאריך...</div>
-                </div>
-            </div>
-            <div id="parasha" style="color: #fbbf24; font-size: 1.4rem; font-weight: bold;"></div>
-            <h1 id="display-title" style="margin:0; font-size: 2.2rem;">טוען...</h1>
-        </header>
+		<header>
+		  <h1 id="display-title" style="margin:0; font-size: 2.2rem;">
+		    טוען...
+		  </h1>
+		
+		  <div id="parasha" style="color:#fbbf24; font-size:1.4rem; font-weight:bold;"></div>
+		
+		  <div class="clock-area">
+		    <div id="weather-info" class="weather">טוען...</div>
+		    <div>
+		      <div class="time" id="clock-t">00:00</div>
+		      <div class="date" id="clock-d">טוען תאריך...</div>
+		    </div>
+		  </div>
+		</header>
+
 
         <div class="sidebar">
             <div class="sidebar-title">📢 הודעות ועד הבית</div>
@@ -184,31 +197,60 @@
             } catch (e) { console.log("Weather error"); }
         }
 
-        async function fetchRSS(url, elementId, isHorizontal = false) {
-            try {
-                const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-                const data = await res.json();
-                const xml = new DOMParser().parseFromString(data.contents, "text/xml");
-                const items = xml.querySelectorAll("item");
-                let text = "";
-                let html = "";
-                items.forEach(item => {
-                    const t = item.querySelector("title").textContent;
-                    text += t + "  •  ";
-                    html += `<div class="news-item"><strong>${t}</strong></div>`;
-                });
-                if(isHorizontal) {
-                    document.getElementById(elementId).innerText = text + " " + text;
-                } else {
-                    document.getElementById(elementId).innerHTML = html + html;
-                }
-            } catch (e) { console.error("RSS Error"); }
-        }
+		async function fetchRSS(url, elementId, isHorizontal = false) {
+		  const el = document.getElementById(elementId);
+		
+		  // fallback מיידי
+		  if (isHorizontal) {
+		    el.innerText = "טוען מבזקים... ";
+		  } else {
+		    el.innerHTML = "<div class='news-item'>טוען חדשות...</div>";
+		  }
+		
+		  try {
+		    const controller = new AbortController();
+		    setTimeout(() => controller.abort(), 7000); // timeout
+		
+		    const res = await fetch(
+		      `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+		      { signal: controller.signal }
+		    );
+		
+		    const data = await res.json();
+		    const xml = new DOMParser().parseFromString(data.contents, "text/xml");
+		    const items = xml.querySelectorAll("item");
+		
+		    let text = "";
+		    let html = "";
+		
+		    items.forEach(item => {
+		      const t = item.querySelector("title")?.textContent;
+		      if (!t) return;
+		      text += t + "  •  ";
+		      html += `<div class="news-item"><strong>${t}</strong></div>`;
+		    });
+		
+		    if (isHorizontal) {
+		      el.innerText = text + " " + text;
+		    } else {
+		      el.innerHTML = html + html;
+		    }
+		
+		  } catch (e) {
+		    if (isHorizontal) {
+		      el.innerText = "אין חיבור לחדשות כרגע";
+		    } else {
+		      el.innerHTML = "<div class='news-item'>אין חיבור לחדשות</div>";
+		    }
+		  }
+		}
+
 
         function updateDisplay() {
             document.getElementById('display-title').innerText = config.title;
             document.getElementById('display-bg').style.backgroundImage = `url('${config.bg}')`;
-            document.getElementById('comm-list').innerHTML = config.comm.map(i => `<div class="news-item">${i}</div>`).join('').repeat(2);
+            document.getElementById('comm-list').innerHTML = config.comm.map(i => `<div class="news-item">${i}</div>`).join('');
+
             fetchRSS(config.ynetUrl, 'ynet-feed', true);
             fetchRSS(config.wallaUrl, 'walla-feed', false);
             fetchWeather();
