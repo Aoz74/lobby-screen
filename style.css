@@ -88,4 +88,20 @@ h2 {
   from { transform: translateX(0); }
   to { transform: translateX(-100%); }
 }
+#board-wrapper {
+  height: calc(100vh - 260px);
+  overflow: hidden;
+  position: relative;
+}
+
+#board-messages {
+  position: absolute;
+  width: 100%;
+}
+
+.board-item {
+  margin-bottom: 30px;
+  font-size: 22px;
+  line-height: 1.4;
+}
 
