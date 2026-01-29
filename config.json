@@ -1,14 +1,13 @@
 {
-  "mainImage": "https://placehold.co/800x600?text=תמונה+מרכזית",
+  "mainImage": "https://placehold.co/800x600",
   "boardMessages": [
     {
-      "title": "הודעת ועד",
-      "body": "בדיקה - אפשר לערוך כאן הודעות"
+      "title": "ועד",
+      "body": "בדיקה"
     },
     {
       "title": "תחזוקה",
-      "body": "ביום חמישי תתבצע עבודת תחזוקה"
+      "body": "יום חמישי"
     }
   ]
 }
-
