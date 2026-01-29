@@ -18,14 +18,30 @@ fetch("config.json")
     document.getElementById("main-image").src = cfg.mainImage;
 
     const board = document.getElementById("board-messages");
+    
     cfg.boardMessages.forEach(msg => {
       const div = document.createElement("div");
-      div.style.marginBottom = "20px";
+      div.className = "board-item";
       div.innerHTML =
         "<strong>" + msg.title + "</strong><br>" +
         msg.body;
       board.appendChild(div);
     });
+    
+    // גלילה אנכית איטית
+    let scrollPos = 0;
+    
+    function scrollBoard() {
+      scrollPos += 0.3; // מהירות גלילה - קטן = איטי יותר
+      board.style.top = -scrollPos + "px";
+    
+      if (scrollPos > board.scrollHeight) {
+        scrollPos = -document.getElementById("board-wrapper").offsetHeight;
+      }
+    }
+    
+    setInterval(scrollBoard, 50);
+
 
   });
 
